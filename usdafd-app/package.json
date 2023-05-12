@@ -1,0 +1,27 @@
+{
+  "name": "usdafd-app",
+  "version": "1.0.0",
+  "description": "server application for interacting with usdafd api",
+  "main": "server.js",
+  "scripts": {
+    "dev": "npx nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thrice64/USDA-FoodData-Api-Project.git"
+  },
+  "author": "Matthew Mendoza, Evan Liang, Deepanker Seth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thrice64/USDA-FoodData-Api-Project/issues"
+  },
+  "homepage": "https://github.com/Thrice64/USDA-FoodData-Api-Project#readme",
+  "dependencies": {
+    "usdafd-module": "file:../usdafd-module",
+    "express": "^4.18.2",
+    "mongodb": "^5.5.0"    
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

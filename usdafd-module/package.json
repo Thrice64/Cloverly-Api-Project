@@ -1,0 +1,22 @@
+{
+  "name": "usdafd-module",
+  "version": "1.0.0",
+  "description": "module to interact with usda food data api",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thrice64/USDA-FoodData-Api-Project.git"
+  },
+  "author": "Matthew Mendoza, Evan Liang, Deepanker Seth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thrice64/USDA-FoodData-Api-Project/issues"
+  },
+  "homepage": "https://github.com/Thrice64/USDA-FoodData-Api-Project#readme",
+  "dependencies": {
+    "superagent": "^8.0.9"
+  }
+}
