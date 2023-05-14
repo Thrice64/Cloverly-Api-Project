@@ -13,7 +13,7 @@ const searchID = async (food_id) => {
     try {
         const idURL = `${base}/food/${food_id}?api_key=${apiKey}`;
         
-        const res = await superagent.get(verifyURL);
+        const res = await superagent.get(idURL);
         console.log(res.body);
     } catch (error) {
         console.log(error);
