@@ -6,7 +6,7 @@ const superagent = require('superagent');
 const base = 'https://api.nal.usda.gov/fdc/v1';
 
 // insert your api key for veriphone here
-const apiKey = ""; // api key here
+const apiKey = "EJMf3ua7NXfoh09gdikfoa362rnuoY2UjsjobHdI"; // api key here
 
 // search api function to search by phone number and/or country_code id
 const searchID = async (food_id) => {

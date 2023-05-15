@@ -38,6 +38,7 @@ router.get('/', async (req, res) => {
     try {
        const { query } = req;
        const { term, metadata } = query;
+
        
        const selection = await foodapp.search(term);
 
@@ -49,11 +50,9 @@ router.get('/', async (req, res) => {
 
        const history = await database.find('Results', term);
        if (history) {
-            await database.update('Results', term, {$inc: { searchCount: 1 },
-             lastSearched: metadata.lastSearched})
+            await database.update('Results', term, { searchCount: parseInt(history.searchCount) +1, lastSearched: new Date()});
        } else {
-            await database.save('Results', {searchTerm: term, searchCount: 1,
-                 lastSearched: metadata.lastSearched})
+            await database.save('Results', {searchTerm: term, searchCount: 1, lastSearched: new Date()});
        };
 
       
