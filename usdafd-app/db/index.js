@@ -42,17 +42,17 @@ const mongo = () => {
     }
 
     /**
-     * @description                      performs a query on a mongo collection by deckId
+     * @description                      performs a query on a mongo collection by foodId
      * @param {String} collectionName    name of a collection in mongo
-     * @param {Object} deckIdentifier    deckId to query
-     * @return {Object or Array}         the card object by deck id or all results
+     * @param {Object} foodIdentifier    deckId to query
+     * @return {Object or Array}         the card object by food id or all results
      */
-    async function find(collectionName, deckIdentifier) {
+    async function findID(collectionName, foodIdentifier) {
         try {
             const collection = db.collection(collectionName);
 
-            if (deckIdentifier) {
-                return await collection.find({ deckId: deckIdentifier }).next();
+            if (foodIdentifier) {
+                return await collection.find({ foodId: foodIdentifier }).next();
             } else {
                 return await collection.find({}).toArray();
             }
@@ -61,20 +61,42 @@ const mongo = () => {
         }
     }
 
+    
     /**
-     * @description                      performs an update on a mongo collection by deckId
+     * @description                      performs a query on a mongo collection by foodId
      * @param {String} collectionName    name of a collection in mongo
-     * @param {Object} deckIdentifier    deckId to query
+     * @param {Object} foodIdentifier    deckId to query
+     * @return {Object or Array}         the card object by food id or all results
+     */
+    async function find(collectionName, foodDescription) {
+        try {
+            const collection = db.collection(collectionName);
+
+            if (foodDescription) {
+                return await collection.find({ description: foodDescription}).next();
+            } else {
+                return await collection.find({}).toArray();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    /**
+     * @description                      performs an update on a mongo collection by foodId
+     * @param {String} collectionName    name of a collection in mongo
+     * @param {Object} foodIdentifier    foodId to query
      * @param {Object} data              data to update into mongo collection
      */
-    async function update(collectionName, deckIdentifier, data) {
+    async function update(collectionName, foodIdentifier, data) {
         try {
             // NOT THE SOLUTION TO HOMEWORK #2
             // HOMEWORK #2 REQUIRES WORKING WITH fs and not MongoDB
             const collection = db.collection(collectionName);
 
             await collection.updateOne(
-                { deckId: deckIdentifier },
+                { deckId: foodIdentifier },
                 { $set: data }
             );
         } catch (error) {

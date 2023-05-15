@@ -22,7 +22,8 @@ const searchID = async (food_id) => {
 
 const search = async (query) => {
     try {
-       const queryURL = `${base}/foods/search?api_key=${apiKey}&query=${query}` 
+       const queryURL = `${base}/foods/search?api_key=${apiKey}&query=${query}&dataType=Foundation,
+       Survey%20%28FNDDS%29,SR%20Legacy&pageSize=25&pageNumber=2&sortBy=dataType.keyword&sortOrder=asc` 
 
        const res = await superagent.get(queryURL);
        console.log(res.body);
