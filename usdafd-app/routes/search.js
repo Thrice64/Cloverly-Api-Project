@@ -4,6 +4,15 @@ const { query } = require('express');
 const database = require('../db');
 const foodapp = require('usdafd-module');
 
+const _formatFoods = (foods) => {
+    return foods.map((food) => {
+        return {
+            description: `${food.description}`,
+            category: `${food.foodCategory}`,
+            foodId: food.fdcId
+        };
+    });
+};
 
 router.use((req, res, next) => {
     const { headers, originalUrl, querl } = req;
@@ -26,21 +35,13 @@ router.use((req, res, next) => {
     next();
 });
 
-const _formatFoods = (foods) => {
-    return foods.map((food) => {
-        return {
-            description: `${food.description, food.foodCategory}`,
-            foodId: food.fdcId
-        };
-    });
-};
-
 router.get('/', async (req, res) => {
     try {
        const { query } = req;
        const { term } = query;
+
        const selection = await foodapp.search(term);
-       console.log(selection);
+
        const foods = _formatFoods(selection.foods);
 
        res.json(foods);
@@ -48,6 +49,25 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json(error.toString());
     }
+});
+
+router.get('/:fdcId', async(req,res) => {
+    try{
+            const { params } = req;
+        
+        if (params['fdcId']){
+            const cut = params['fdcId'].indexOf("=");
+            params['fdcId'] = params['fdcId'].slice(cut+1);
+        }
+        const results = await foodapp.searchID(params['fdcId']);
+
+        
+        console.log(results);
+        return res.status(200).json(results);
+    } catch (error){
+            res.status(error);
+    }
+
 });
 
 module.exports = router;

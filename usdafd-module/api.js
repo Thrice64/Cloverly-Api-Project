@@ -11,10 +11,11 @@ const apiKey = ""; // api key here
 // search api function to search by phone number and/or country_code id
 const searchID = async (food_id) => {
     try {
-        const idURL = `${base}/food/${food_id}?api_key=${apiKey}`;
+        const idURL = `${base}/food/${food_id}?api_key=${apiKey}
+        &format=abridged&nutrients=203%2C204%2C205%2C206%2C207`;
         
         const res = await superagent.get(idURL);
-        console.log(res.body);
+        return (res.body);
     } catch (error) {
         console.log(error);
     }
@@ -26,7 +27,7 @@ const search = async (query) => {
        Survey%20%28FNDDS%29,SR%20Legacy&pageSize=25&pageNumber=2&sortBy=dataType.keyword&sortOrder=asc` 
 
        const res = await superagent.get(queryURL);
-       console.log(res.body);
+       return res.body;
     } catch (error) {
         console.log(error);
     }
