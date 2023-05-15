@@ -7,7 +7,8 @@ const config = require('../config.json');
  * @return {Object}     object containing functions
  */
 const mongo = () => {
-    const mongoURL = `mongodb+srv://${config.username}:${config.password}@cluster0.onzz7o7.mongodb.net/?retryWrites=true&w=majority`;
+    const mongoURL = `mongodb+srv://${config.username}:${config.password}
+    @cluster0.onzz7o7.mongodb.net/${config.database_name}?retryWrites=true&w=majority`;
 
     let db = null;
 
@@ -40,27 +41,6 @@ const mongo = () => {
             console.log(error);
         }
     }
-
-    /**
-     * @description                      performs a query on a mongo collection by foodId
-     * @param {String} collectionName    name of a collection in mongo
-     * @param {Object} foodIdentifier    deckId to query
-     * @return {Object or Array}         the card object by food id or all results
-     */
-    async function findID(collectionName, foodIdentifier) {
-        try {
-            const collection = db.collection(collectionName);
-
-            if (foodIdentifier) {
-                return await collection.find({ foodId: foodIdentifier }).next();
-            } else {
-                return await collection.find({}).toArray();
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     
     /**
      * @description                      performs a query on a mongo collection by foodId
@@ -73,7 +53,7 @@ const mongo = () => {
             const collection = db.collection(collectionName);
 
             if (foodDescription) {
-                return await collection.find({ description: foodDescription}).next();
+                return await collection.find({ searchTerm: foodDescription}).next();
             } else {
                 return await collection.find({}).toArray();
             }
@@ -81,7 +61,6 @@ const mongo = () => {
             console.log(error);
         }
     }
-
 
     /**
      * @description                      performs an update on a mongo collection by foodId
@@ -96,7 +75,7 @@ const mongo = () => {
             const collection = db.collection(collectionName);
 
             await collection.updateOne(
-                { deckId: foodIdentifier },
+                { searchTerm: foodIdentifier },
                 { $set: data }
             );
         } catch (error) {

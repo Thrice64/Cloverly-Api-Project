@@ -7,8 +7,7 @@ const foodapp = require('usdafd-module');
 const _formatFoods = (foods) => {
     return foods.map((food) => {
         return {
-            description: `${food.description}`,
-            category: `${food.foodCategory}`,
+            display: `${food.description}`,
             foodId: food.fdcId
         };
     });
@@ -28,7 +27,7 @@ router.use((req, res, next) => {
 
     if (splitUrl.length === 2 && first === 'search' && second !==undefined) {
         query.metadata = {
-            searchEnd: new Date()
+            lastSearched: new Date()
         };
     }
 
@@ -39,15 +38,25 @@ router.get('/', async (req, res) => {
     try {
        const { query } = req;
        const { term } = query;
-
+       
        const selection = await foodapp.search(term);
 
        const foods = _formatFoods(selection.foods);
 
-       res.json(foods);
-       
+       const results = {searchTerm: term, results: foods};
+
+       res.json(results);
+
+       const history = await database.find('Results', term);
+       if (history) {
+            await database.update('Results', term, {$inc: { searchCount: 1 }, lastSearched: new Date()})
+       } else {
+            await database.save('Results', {searchTerm: term, searchCount: 1, lastSearched: new Date()})
+       };
+
+      
     } catch (error) {
-        res.status(500).json(error.toString());
+        res.status(error);
     }
 });
 

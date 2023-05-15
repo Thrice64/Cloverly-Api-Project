@@ -8,9 +8,9 @@ router.get('/', async (req, res) => {
         let history;
 
         if (searchTerm) {
-            history = await database.find('History', searchTerm);
+            history = await database.find('Results', searchTerm);
         } else {
-            history = await database.find('History');
+            history = await database.find('Results');
         }
 
         res.json(history);
