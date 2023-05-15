@@ -1,13 +1,22 @@
 const router = require('express').Router();
-
 const database = require('../db');
 
 router.get('/', async (req, res) => {
     try {
-        const history = await database.find('History');
+        const searchTerm = req.query.searchTerm;
+
+        let history;
+
+        if (searchTerm) {
+            history = await database.find('History', searchTerm);
+        } else {
+            history = await database.find('History');
+        }
+
         res.json(history);
-    }  catch (error) {
-        res.status(error);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.toString() });
     }
 });
 

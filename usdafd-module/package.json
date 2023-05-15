@@ -4,7 +4,9 @@
   "description": "module to interact with usda food data api",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,9 @@
   "homepage": "https://github.com/Thrice64/USDA-FoodData-Api-Project#readme",
   "dependencies": {
     "superagent": "^8.0.9"
+  },
+  "devDependencies": {
+    "eslint": "^8.4.1",
+    "jest": "^27.4.5"
   }
 }
