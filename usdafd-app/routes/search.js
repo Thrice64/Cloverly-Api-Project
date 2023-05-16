@@ -3,6 +3,7 @@ const router = require('express').Router();
 const { query } = require('express');
 const database = require('../db');
 const foodapp = require('usdafd-module');
+var parseUrl = require('parseurl');
 
 const _formatFoods = (foods) => {
     return foods.map((food) => {
@@ -14,19 +15,12 @@ const _formatFoods = (foods) => {
 };
 
 router.use((req, res, next) => {
-    const { headers, originalUrl, querl } = req;
-    const splitUrl = originalUrl.split('/').filter((str) => str !== '');
-    const [first, second] = splitUrl;
+    const { headers, query } = req;
 
-    if(splitUrl.length === 1 && first === 'search') {
+    if (parseUrl(req).path!=='/' && parseUrl(req).query.includes('term')) {
+        console.log('searched');
         query.metadata = {
             agent: headers['user-agent'],
-            searchStart: new Date()
-        };
-    }
-
-    if (splitUrl.length === 2 && first === 'search' && second !==undefined) {
-        query.metadata = {
             lastSearched: new Date()
         };
     }
@@ -50,9 +44,9 @@ router.get('/', async (req, res) => {
 
        const history = await database.find('Results', term);
        if (history) {
-            await database.update('Results', term, { searchCount: parseInt(history.searchCount) +1, lastSearched: new Date()});
+            await database.update('Results', term, { searchCount: parseInt(history.searchCount) +1, lastSearched: metadata.lastSearched});
        } else {
-            await database.save('Results', {searchTerm: term, searchCount: 1, lastSearched: new Date()});
+            await database.save('Results', {searchTerm: term, searchCount: 1, lastSearched: metadata.lastSearched});
        };
 
       
