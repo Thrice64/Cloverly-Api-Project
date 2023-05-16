@@ -15,16 +15,21 @@ const _formatFoods = (foods) => {
 };
 
 router.use((req, res, next) => {
-    const { headers, query } = req;
-
-    if (parseUrl(req).path!=='/' && parseUrl(req).query.includes('term')) {
-        console.log('searched');
+    const { headers, originalUrl, query } = req;
+    const splitUrl = originalUrl.split('/').filter((str) => str !== '');
+    const [first, second] = splitUrl;
+    if (splitUrl.length === 1 && first === 'search') {
         query.metadata = {
             agent: headers['user-agent'],
-            lastSearched: new Date()
         };
     }
 
+    if ((splitUrl.length === 2 || splitUrl.length === 3) && first === 'search' && second !== null) {
+        query.metadata = {
+            lastSearched: new Date()
+        };
+    }
+   
     next();
 });
 
@@ -35,7 +40,6 @@ router.get('/', async (req, res) => {
 
        
        const selection = await foodapp.search(term);
-
        const foods = _formatFoods(selection.foods);
 
        const results = {searchTerm: term, results: foods};
@@ -44,9 +48,9 @@ router.get('/', async (req, res) => {
 
        const history = await database.find('Results', term);
        if (history) {
-            await database.update('Results', term, { searchCount: parseInt(history.searchCount) +1, lastSearched: metadata.lastSearched});
+            await database.update('Results', term, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched});
        } else {
-            await database.save('Results', {searchTerm: term, searchCount: 1, lastSearched: metadata.lastSearched});
+            await database.save('Results', {searchTerm: term, searchCount: selection.totalHits, lastSearched: metadata.lastSearched});
        };
 
       
@@ -55,19 +59,35 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:fdcId', async(req,res) => {
+router.get('/:fdcId/details', async(req,res) => {
     try{
-            const { params } = req;
+            
+            const { params, query } = req;
+            const { searched, metadata } = query; 
+            //console.log(req);
         
         if (params['fdcId']){
             const cut = params['fdcId'].indexOf("=");
             params['fdcId'] = params['fdcId'].slice(cut+1);
         }
         const results = await foodapp.searchID(params['fdcId']);
-
         
-        console.log(results);
-        return res.status(200).json(results);
+        const selection = {
+            id: results.fdcId,
+            display: results.description
+        }
+
+        const history = await database.find('Results', searched);
+        if(history.selection){
+            await database.update('Results', searched, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched, 
+                $push: {selections: selection}});
+        }else{
+            await database.update('Results', searched, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched, 
+                selections: selection});
+        }
+        
+       return res.status(200).json(results);
+       
     } catch (error){
             res.status(error);
     }

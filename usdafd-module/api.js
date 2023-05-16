@@ -5,13 +5,12 @@ const superagent = require('superagent');
 const base = 'https://api.nal.usda.gov/fdc/v1';
 
 // insert your api key for  foodData Central here
-const apiKey = ""; // api key here
+const apiKey = "EJMf3ua7NXfoh09gdikfoa362rnuoY2UjsjobHdI"; // api key here
 
 // search api function to search by foodID
 const searchID = async (food_id) => {
     try {
-        const idURL = `${base}/food/${food_id}?api_key=${apiKey}
-        &format=abridged&nutrients=203%2C204%2C205%2C206%2C207`;
+        const idURL = `${base}/food/${food_id}?api_key=${apiKey}&format=abridged&nutrients=203%2C204%2C205%2C206%2C207`;
         
         const res = await superagent.get(idURL);
         return (res.body);
