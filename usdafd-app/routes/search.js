@@ -24,7 +24,15 @@ router.use((req, res, next) => {
         };
     }
 
-    if ((splitUrl.length === 2 || splitUrl.length === 3) && first === 'search' && second !== null) {
+    if(first.includes('term')){
+        console.log('searched');
+        query.metadata = {
+            lastSearched: new Date()
+        };
+    }
+
+    if (splitUrl.length === 3 && first === 'search' && second !== null) {
+        console.log('searched ID');
         query.metadata = {
             lastSearched: new Date()
         };
@@ -48,7 +56,7 @@ router.get('/', async (req, res) => {
 
        const history = await database.find('Results', term);
        if (history) {
-            await database.update('Results', term, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched});
+            await database.update('Results', term, {lastSearched: metadata.lastSearched});
        } else {
             await database.save('Results', {searchTerm: term, searchCount: selection.totalHits, lastSearched: metadata.lastSearched});
        };
@@ -61,10 +69,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:fdcId/details', async(req,res) => {
     try{
-            
             const { params, query } = req;
             const { searched, metadata } = query; 
-            //console.log(req);
         
         if (params['fdcId']){
             const cut = params['fdcId'].indexOf("=");
@@ -78,11 +84,11 @@ router.get('/:fdcId/details', async(req,res) => {
         }
 
         const history = await database.find('Results', searched);
-        if(history.selection){
-            await database.update('Results', searched, { searchCount: results.totalHits, lastSearched: metadata.lastSearched, 
-                $push: {selections: selection}});
+        if(history.selections){
+            await database.update('Results', searched, {lastSearched: metadata.lastSearched, 
+                selections: selection});
         }else{
-            await database.update('Results', searched, { searchCount: results.totalHits, lastSearched: metadata.lastSearched, 
+            await database.update('Results', searched, {lastSearched: metadata.lastSearched, 
                 selections: selection});
         }
         

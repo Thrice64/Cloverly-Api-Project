@@ -12,7 +12,7 @@ const mongo = () => {
     let db = null;
 
     /**
-     * @description         connects to mongo atlas via url and sets db instace
+     * @description         connects to mongo atlas via url and sets db instance
      */
     async function connect() {
         try {
@@ -69,14 +69,20 @@ const mongo = () => {
      */
     async function update(collectionName, foodIdentifier, data) {
         try {
-            // NOT THE SOLUTION TO HOMEWORK #2
-            // HOMEWORK #2 REQUIRES WORKING WITH fs and not MongoDB
-            const collection = db.collection(collectionName);
 
-            await collection.updateOne(
-                { searchTerm: foodIdentifier },
-                { $set: data }
-            );
+            const collection = db.collection(collectionName);
+            if(data.selections) {
+                await collection.updateOne(
+                    { searchTerm: foodIdentifier },
+                    { $set: { lastSearched: data.lastSearched },
+                     $push: { selections: data.selections } }
+                   );
+            }else {
+                await collection.updateOne(
+                    { searchTerm: foodIdentifier },
+                    { $set: data }
+                );
+            }
         } catch (error) {
             console.log(error);
         }
