@@ -79,10 +79,10 @@ router.get('/:fdcId/details', async(req,res) => {
 
         const history = await database.find('Results', searched);
         if(history.selection){
-            await database.update('Results', searched, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched, 
+            await database.update('Results', searched, { searchCount: results.totalHits, lastSearched: metadata.lastSearched, 
                 $push: {selections: selection}});
         }else{
-            await database.update('Results', searched, { searchCount: selection.totalHits, lastSearched: metadata.lastSearched, 
+            await database.update('Results', searched, { searchCount: results.totalHits, lastSearched: metadata.lastSearched, 
                 selections: selection});
         }
         
