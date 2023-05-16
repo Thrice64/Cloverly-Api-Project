@@ -1,9 +1,7 @@
-require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 8888;
+const port =  8888;
 
 // require in our database functionality
 const mongo = require('./db');
@@ -12,7 +10,6 @@ const mongo = require('./db');
 const history = require('./routes/history.js');
 const search = require('./routes/search.js');
 
-app.use(cors());
 app.use(express.json());
 
 // add routes to our express application

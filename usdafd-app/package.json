@@ -22,8 +22,6 @@
   },
   "homepage": "https://github.com/Thrice64/USDA-FoodData-Api-Project#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^14.3.2",
     "express": "^4.18.2",
     "mongodb": "^5.5.0",
     "usdafd-module": "file:../usdafd-module"

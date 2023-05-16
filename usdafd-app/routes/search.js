@@ -3,7 +3,6 @@ const router = require('express').Router();
 const { query } = require('express');
 const database = require('../db');
 const foodapp = require('usdafd-module');
-var parseUrl = require('parseurl');
 
 const _formatFoods = (foods) => {
     return foods.map((food) => {
@@ -79,7 +78,7 @@ router.get('/:fdcId/details', async(req,res) => {
         const results = await foodapp.searchID(params['fdcId']);
         
         const selection = {
-            id: results.fdcId,
+            foodId: results.fdcId,
             display: results.description
         }
 
